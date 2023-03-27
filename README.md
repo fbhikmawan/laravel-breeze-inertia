@@ -1,66 +1,120 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Breeze Inertia
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This a Sandbox of jump-start Laravel Breeze using InertiaJS for Laravel 10<br>Feel free to modify.
 
-## About Laravel
+------------
+<br>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## DEVELOPMENT Setup
+On fresh cloned local repository, please follow Step 0 until 2.<br>After that, you only follow Step 3 until 4.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+(-) Clone the repository to your local.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+(0) Set the .env file according to your docker container settings. You can use .env.example for reference.
 
-## Learning Laravel
+(1) Run below script to install packages using the composer by the help of docker.
+```
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest \
+    composer install --ignore-platform-reqs
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+--wait until the composer done install all the packages--
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+(2) Run below script to create the app key.
+```
+php artisan key:generate
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+(3) Run below script to create the docker container using the Laravel Sail.
+```
+./vendor/bin/sail up
+```
 
-## Laravel Sponsors
+--wait until the Laravel Sail done install and start the docker container--
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+If you encounter a build error related to port usage, please change those respective ports on the .env file.
 
-### Premium Partners
+(4) To access the site, refer the APP_PORT setting in .env file.
+URL will be: http://localhost:{APP_PORT}
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+------------
+<br>
 
-## Contributing
+## DEPLOYMENT Setup
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Prepare your server:
 
-## Code of Conduct
+(-) Make sure your server meets the minimum requirements as described in https://laravel.com/docs/10.x/deployment#server-requirements
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+(-) Clone the repository to your server at your desired folder. Lets say on folder "`\srv\`". Then, the repository full path will be "`\srv\laravel-breeze-inertia`".
 
-## Security Vulnerabilities
+Begin to deploy the app:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+(0) Set the .env file according to your server environtment. You can use .env.example for reference.
 
-## License
+(1) Run below script to install composer dependencies
+```
+composer install
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+(2) Run below script to create the app key.
+```
+php artisan key:generate
+```
+
+(3) Update the folder permission for Laravel's logging activities. Webserver user and group depend on your webserver and your OS. To figure out what's your web server user and group use the following commands.
+
+For NGINX use:
+```
+ps aux|grep nginx|grep -v grep
+```
+Then update the owner and permission.<br>
+The string 'www-data' below is taken from script above. 
+```
+sudo chown -R $USER:www-data storage
+sudo chown -R $USER:www-data bootstrap/cache
+```
+```
+chmod -R 775 storage
+chmod -R 775 bootstrap/cache
+```
+
+(4) Create the nginx configuration file named "`example.com`" to the folder "`/etc/nginx/sites-available`"
+```
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+    root /home/{your_username}/srv/laravel-breeze-inertia/public;
+ 
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+ 
+    index index.php;
+ 
+    charset utf-8;
+ 
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+ 
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+ 
+    error_page 404 /index.php;
+ 
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+ 
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
