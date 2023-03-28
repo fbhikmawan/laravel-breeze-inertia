@@ -38,7 +38,23 @@ php artisan key:generate
 
 If you encounter a build error related to port usage, please change those respective ports on the .env file.
 
-(4) To access the site, refer the APP_PORT setting in .env file.
+(4) Run below script to create the database structure
+```
+./vendor/bin/sail artisan migrate
+```
+
+(5) Run below script to install nodejs packages dependencies
+```
+./vendor/bin/sail npm install
+```
+
+(6) Run below script to make Vite Development server is working
+```
+./vendor/bin/sail npm run dev
+```
+
+
+(7) To access the site, refer the APP_PORT setting in .env file.
 URL will be: http://localhost:{APP_PORT}
 
 ------------
