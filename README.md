@@ -24,12 +24,7 @@ docker run --rm \
 
 --wait until the composer done install all the packages--
 
-(2) Run below script to create the app key.
-```
-php artisan key:generate
-```
-
-(3) Run below script to create the docker container using the Laravel Sail.
+(2) Run below script to create the docker container using the Laravel Sail.
 ```
 ./vendor/bin/sail up
 ```
@@ -37,6 +32,11 @@ php artisan key:generate
 --wait until the Laravel Sail done install and start the docker container--
 
 If you encounter a build error related to port usage, please change those respective ports on the .env file.
+
+(3) Run below script to create the app key.
+```
+./vendor/bin/sail artisan key:generate
+```
 
 (4) Run below script to create the database structure
 ```
